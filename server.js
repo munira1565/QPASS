@@ -35,7 +35,7 @@ app.use(
     secret:  process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: true },
   })
 );
 
@@ -92,6 +92,7 @@ app.post('/create-order', async (req, res) => {
 
 // Dashboard
 app.get('/dashboard', async (req, res) => {
+   console.log("SESSION USER:", req.session.userId);
   if (!req.session.userId) return res.redirect('/login');
   const user = await User.findById(req.session.userId).lean();
   const latestApplication = await AppliedUser.findOne({ userId: user._id }).sort({ appliedAt: -1 }).lean();

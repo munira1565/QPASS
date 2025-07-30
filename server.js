@@ -18,7 +18,8 @@ const AppliedUser = require('./models/applied-users');
 const Notification = require('./models/notification');
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
+
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Bus Pass System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+    /* Splash Screen */
+    .splash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #0f4c5c, #0c3a47);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      z-index: 9999;
+      animation: hideSplash 1s ease forwards;
+      animation-delay: 4.5s;
+    }
+
+    .splash h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      z-index: 10;
+      animation: popIn 1s ease-in-out;
+    }
+
+    .splash .bus {
+      position: absolute;
+      bottom: 60px;
+      left: -400px;
+      width: 280px;
+      animation: moveBus 4s linear forwards;
+    }
+
+    @keyframes moveBus { to { left: 110%; } }
+    @keyframes hideSplash { to { opacity: 0; visibility: hidden; } }
+    @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    .main-content {
+      opacity: 0;
+      animation: fadeInMain 1s ease-in-out forwards;
+      animation-delay: 5s;
+    }
+
+    @keyframes fadeInMain { to { opacity: 1; } }
+
+    header {
+      background: #1f1f1f;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 60px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    .logo { font-weight: 700; font-size: 1.6rem; color: #0f9ab0; }
+
+    nav a {
+      margin-left: 25px; text-decoration: none; color: #e0e0e0;
+      font-weight: 500; transition: color 0.3s;
+    }
+    nav a:hover { color: #0f9ab0; }
+
+    .hero {
+      padding: 100px 20px 60px;
+      background: #1f1f1f;
+    }
+
+    .hero-content {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    .hero-text { flex: 1 1 500px; text-align: left; padding: 20px; }
+    .hero-img { flex: 1 1 400px; text-align: center; }
+
+    .hero-img img {
+      max-width: 100%; height: auto;
+      animation: floatImage 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatImage { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
+
+    .hero h1 { font-size: 3rem; color: #ffffff; margin-bottom: 15px; }
+    .hero p { font-size: 1.1rem; color: #cfcfcf; margin-bottom: 30px; }
+
+    .buttons a {
+      text-decoration: none; background: #0f4c5c; color: white;
+      padding: 12px 25px; margin: 0 10px 10px 0;
+      border-radius: 25px; font-weight: 500; transition: all 0.3s ease; display: inline-block;
+    }
+    .buttons a:hover { background: #0d3b49; transform: translateY(-2px); }
+
+    .section {
+      padding: 70px 20px;
+      text-align: center;
+      background: #1a1a1a;
+    }
+    .section:nth-of-type(even) { background: #1f1f1f; }
+
+    .section h2 { font-size: 2rem; margin-bottom: 30px; color: #0f9ab0; }
+
+    .steps, .benefits {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 20px;
+    }
+
+    .step, .benefit {
+      background: #2a2a2a;
+      padding: 30px; border-radius: 15px;
+      width: 260px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      transition: transform 0.3s;
+    }
+    .step:hover, .benefit:hover { transform: translateY(-8px); }
+
+    .step i, .benefit i { font-size: 28px; color: #0f9ab0; margin-bottom: 15px; }
+
+    .footer {
+      background: #0c3a47; color: white; padding: 30px 20px; text-align: center;
+    }
+    .footer a { color: #0f9ab0; margin: 0 10px; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .steps, .benefits { flex-direction: column; align-items: center; }
+      .splash h1 { font-size: 2rem; padding: 20px; }
+      .splash .bus { width: 200px; bottom: 30px; }
+      header { flex-direction: column; gap: 10px; }
+      nav a { margin-left: 15px; }
+      .hero-content { flex-direction: column; text-align: center; }
+      .hero-text { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Splash Screen -->
+  <div class="splash">
+    <h1>Welcome to<br>Smart Bus Pass System</h1>
+    <img src="/images/3d1.png" class="bus" alt="3D Bus">
+    <audio autoplay>
+      <source src="bus-sound.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header>
+      <div class="logo">QPass</div>
+      <nav>
+        <a href="#">Home</a>
+        <a href="/login">Login</a>
+        <a href="/signup">Apply</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Get Your Bus Pass in Minutes</h1>
+          <p>No paperwork. No waiting. E-verification with instant pass generation.</p>
+          <div class="buttons">
+            <a href="/login">Login</a>
+            <a href="/signup">Apply Now</a>
+          </div>
+        </div>
+        <div class="hero-img">
+          <img src="/images/BUS1.png" alt="Bus Illustration">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step"><i class="fas fa-user-plus"></i><p>Sign up with your details</p></div>
+        <div class="step"><i class="fas fa-upload"></i><p>Upload your ID proof</p></div>
+        <div class="step"><i class="fas fa-check-circle"></i><p>E-Verification is done instantly</p></div>
+        <div class="step"><i class="fas fa-qrcode"></i><p>Download your Bus Pass with QR code</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <h2>Who Can Apply?</h2>
+      <p>Open to all citizens — Students, Employees, Seniors, and Daily Travelers.</p>
+    </section>
+
+    <section class="section">
+      <h2>Why Choose Us?</h2>
+      <div class="benefits">
+        <div class="benefit"><i class="fas fa-sync-alt"></i><p>Instant approval with E-verification</p></div>
+        <div class="benefit"><i class="fas fa-mobile-alt"></i><p>Digital QR-based pass</p></div>
+        <div class="benefit"><i class="fas fa-shield-alt"></i><p>Secure and Eco-friendly</p></div>
+        <div class="benefit"><i class="fas fa-globe"></i><p>Accessible from anywhere</p></div>
+      </div>
+    </section>
+
+    <footer class="footer" id="contact">
+      <p>
+        <a href="#about">About</a> |
+        <a href="#contact">Contact</a> |
+        <a href="#">Terms</a> |
+        <a href="#">Privacy</a>
+      </p>
+      <p>&copy; 2025 Smart Bus Pass System</p>
+    </footer>
+  </div>
+</body>
+</html>

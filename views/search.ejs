@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search User</title>
+  <style>
+    :root {
+      --primary: #1e1e2f;
+      --secondary: #2a2a40;
+      --text: #ffffffcc;
+      --accent: #4fc3f7;
+      --border: #3c3c50;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+    body { background: var(--primary); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+    .container { display: flex; width: 100%; }
+
+    .sidebar {
+      width: 240px;
+      background: var(--secondary);
+      padding: 30px 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar h2 { font-size: 18px; margin-bottom: 40px; color: #fff; }
+    .sidebar ul { list-style: none; }
+    .sidebar ul li a {
+      display: block; padding: 12px 0;
+      color: var(--text); text-decoration: none; transition: 0.3s;
+    }
+    .sidebar ul li a:hover,
+    .sidebar ul li.active a { color: var(--accent); font-weight: bold; }
+
+    .dashboard {
+      flex: 1;
+      padding: 40px;
+      background: #1b1b2e;
+      overflow-y: auto;
+    }
+
+    .header { display: flex; justify-content: space-between; align-items: center; }
+    h1 { font-size: 26px; color: #fff; }
+
+    .search-bar { margin: 30px 0; }
+    .search-bar input {
+      width: 100%; padding: 12px 16px;
+      border: none; border-radius: 6px;
+      background: #2c2c44; color: #fff; font-size: 15px;
+    }
+
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 20px;
+      background: var(--secondary); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+    }
+    th, td { padding: 14px 16px; text-align: left; }
+    th { background: #2f2f45; color: #fff; font-weight: bold; border-bottom: 1px solid var(--border); }
+    tr:nth-child(even) { background: #252539; }
+    tr:hover { background: #33334a; }
+
+    .status {
+      font-size: 13px; font-weight: bold; padding: 4px 10px; border-radius: 4px;
+    }
+    .approved { background: #4caf50; color: #fff; }
+    .pending { background: #ffc107; color: #000; }
+    .rejected { background: #f44336; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>BUS PASS ADMIN</h2>
+      <ul>
+        <li><a href="/admindashboard">Dashboard</a></li>
+        <li><a href="/pending">Pending</a></li>
+        <li><a href="/approved">Approved</a></li>
+        <li class="active"><a href="/search">Search User</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="dashboard">
+      <div class="header">
+        <h1>Search Users</h1>
+      </div>
+
+      <div class="search-bar">
+        <form action="/search" method="get">
+          <input type="text" name="query" value="<%= typeof query !== 'undefined' ? query : '' %>" placeholder="Search by name or email...">
+        </form>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>App. ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (usersWithApps.length > 0) { %>
+            <% usersWithApps.forEach(entry => { %>
+              <tr>
+                <td>
+                  <% if (entry.latestApp) { %>
+                    #<%= entry.latestApp._id.toString().slice(-6).toUpperCase() %>
+                  <% } else { %>
+                    N/A
+                  <% } %>
+                </td>
+                <td><%= entry.user.username %></td>
+                <td><%= entry.user.email %></td>
+                <td>
+                  <% if (entry.latestApp) { %>
+                    <span class="status <%= entry.latestApp.passStatus === 'approved' ? 'approved' : (entry.latestApp.passStatus === 'manual_review' ? 'pending' : 'rejected') %>">
+                      <%= entry.latestApp.passStatus.charAt(0).toUpperCase() + entry.latestApp.passStatus.slice(1) %>
+                    </span>
+                  <% } else { %>
+                    <span class="status pending">No Pass</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4" style="text-align:center;">No users found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</body>
+</html>

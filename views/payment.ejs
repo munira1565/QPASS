@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bus Pass Payment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Go Back Button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 16px;
+      background-color: #ffffff;
+      border: 2px solid #2193b0;
+      border-radius: 8px;
+      color: #2193b0;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.3s ease;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .back-button:hover {
+      background-color: #2193b0;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    /* Card container */
+    .payment-card {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .payment-card h1 {
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 28px;
+    }
+
+    .payment-card p {
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    /* Pay Now Button */
+    #rzp-button {
+      padding: 14px 28px;
+      background-color: #2193b0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #rzp-button:hover {
+      background-color: #17627a;
+      transform: scale(1.05);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Go Back Button -->
+  <a href="/dashboard" class="back-button">← Go Back</a>
+
+  <div class="payment-card">
+    <h1>Bus Pass Payment</h1>
+    <p>Pay securely and instantly for your bus pass.</p>
+    <button id="rzp-button">Pay ₹100 Now</button>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById('rzp-button').onclick = async function () {
+      const res = await fetch('/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: 10000 })
+
+      });
+      const data = await res.json();
+
+      const options = {
+        key: 'rzp_test_1DP5mmOlF5G5ag', // Replace with your Razorpay Key
+        amount: data.amount,
+        currency: data.currency,
+        name: "Bus Pass System",
+        description: "Bus Pass Payment",
+        order_id: data.id,
+        handler: function (response) {
+          alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+        },
+        theme: { color: "#2193b0" }
+      };
+
+      const rzp1 = new Razorpay(options);
+      rzp1.open();
+    };
+  </script>
+</body>
+</html>

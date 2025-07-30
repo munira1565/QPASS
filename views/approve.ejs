@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Approve/Reject Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: #f9fbfd;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            padding: 12px 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background: #3b4d68;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background: #1e88e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1565c0;
+        }
+
+        .btn.reject {
+            background: #e53935;
+        }
+
+        .btn.reject:hover {
+            background: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="/admindashboard">Dashboard</a></li>
+            <li><a href="/pending">Pending Applications</a></li>
+            
+            <li><a href="/approved">Approved Passes</a></li>
+            <li><a href="/search">User Search/View</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Approve/Reject Application</h1>
+
+        <% if (application) { %>
+            <h3>User Info:</h3>
+            <p>Name: <%= application.userId.username %>
+            </p>
+            <p>Email: <%= application.userId.email %>
+            </p>
+            <p>Uploaded ID:</p>
+            <img src="/uploads/<%= application.idProofPath %>" alt="Uploaded ID"
+                style="margin:15px 0; border:1px solid #ccc; max-width:400px;">
+
+            <form action="/approve/<%= application._id %>/approve" method="POST" style="display:inline;">
+                <button type="submit" class="btn approve">Approve</button>
+            </form>
+            <form action="/approve/<%= application._id %>/reject" method="POST" style="display:inline;">
+                <button type="submit" class="btn reject">Reject</button>
+            </form>
+            <% } else { %>
+                <p style="color:red;">Error: Application data not found. Please go back to Pending Applications.</p>
+                <% } %>
+    </div>
+</body>
+
+</html>

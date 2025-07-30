@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Approved Applications</title>
+  <style>
+    :root {
+      --primary: #1e1e2f;
+      --secondary: #2a2a40;
+      --text: #ffffffcc;
+      --accent: #4fc3f7;
+      --border: #3c3c50;
+      --approved: #4caf50;
+      --rejected: #f44336;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+    body { background: var(--primary); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+    .container { display: flex; width: 100%; }
+
+    .sidebar {
+      width: 240px;
+      background: var(--secondary);
+      padding: 30px 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar h2 { font-size: 18px; margin-bottom: 40px; color: #fff; }
+    .sidebar ul { list-style: none; }
+    .sidebar ul li a {
+      display: block; padding: 12px 0;
+      color: var(--text); text-decoration: none; transition: 0.3s;
+    }
+    .sidebar ul li a:hover,
+    .sidebar ul li.active a { color: var(--accent); font-weight: bold; }
+
+    .dashboard {
+      flex: 1;
+      padding: 40px;
+      background: #1b1b2e;
+      overflow-y: auto;
+    }
+
+    .header { display: flex; justify-content: space-between; align-items: center; }
+
+    h1 { font-size: 26px; color: #fff; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+    }
+
+    th {
+      background: #2f2f45;
+      color: #fff;
+      font-weight: bold;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:nth-child(even) { background: #252539; }
+    tr:hover { background: #33334a; }
+
+    .status {
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .approved { background: var(--approved); color: #fff; }
+    .rejected { background: var(--rejected); color: #fff; }
+
+    .download-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .download-btn:hover { background: #29b6f6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>BUS PASS ADMIN</h2>
+      <ul>
+        <li><a href="/admindashboard">Dashboard</a></li>
+        <li><a href="/pending">Pending</a></li>
+        <li class="active"><a href="/approved">Approved</a></li>
+        <li><a href="/search">Search User</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="dashboard">
+      <div class="header">
+        <h1>Approved & Rejected Applications</h1>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>App. ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Pass</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (approvedApps.length > 0) { %>
+            <% approvedApps.forEach(app => { %>
+              <tr>
+                <td>#<%= app._id.toString().slice(-6).toUpperCase() %></td>
+                <td><%= app.userId ? app.userId.username : "User Deleted" %></td>
+                <td><%= app.userId ? app.userId.email : "N/A" %></td>
+                <td>
+                  <span class="status <%= app.passStatus === 'approved' ? 'approved' : 'rejected' %>">
+                    <%= app.passStatus.charAt(0).toUpperCase() + app.passStatus.slice(1) %>
+                  </span>
+                </td>
+                <td>
+                  <% if (app.passStatus === 'approved' && app.qrData) { %>
+                    <a href="<%= app.qrData %>" download class="download-btn">Download Pass</a>
+                  <% } else if (app.passStatus === 'rejected') { %>
+                    <em>Rejected</em>
+                  <% } else { %>
+                    <em>No QR Available</em>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5" style="text-align:center;">No approved or rejected applications found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</body>
+</html>

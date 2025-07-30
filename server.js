@@ -18,7 +18,7 @@ const AppliedUser = require('./models/applied-users');
 const Notification = require('./models/notification');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT ;
 
 
 app.set('view engine', 'ejs');
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Session setup
 app.use(
   session({
-    secret: 'your_secret_key',
+    secret:  process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false },

@@ -30,14 +30,28 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session setup
+const MongoStore = require('connect-mongo');
+
+app.set('trust proxy', 1); // <- important for secure cookies behind Render's proxy
+
 app.use(
   session({
-    secret:  process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 14 * 24 * 60 * 60, // 14 days
+    }),
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production', // true only in production (Render)
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 14 * 24 * 60 * 60 * 1000
+    }
   })
 );
+
 
 // MongoDB connection
 const uri = process.env.MONGODB_URI;  

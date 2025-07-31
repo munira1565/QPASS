@@ -175,16 +175,16 @@
     confirmPay.addEventListener('click', async () => {
       confirmModal.hide();
 
-      // Get amount in paise (Razorpay expects amount in paise)
       const amountField = parseInt(document.getElementById('amount').value) * 100;
 
       // Create Razorpay order
       const res = await fetch('/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: amountField })
+        body: JSON.stringify({ amount: amountField }),
+        credentials: 'include' // <-- IMPORTANT: Send cookies
       });
-      const data = await res.json();;
+      const data = await res.json();
 
       const options = {
         key: 'rzp_test_1DP5mmOlF5G5ag',
@@ -194,9 +194,13 @@
         description: "Bus Pass Payment",
         order_id: data.id,
         handler: async function (response) {
-          // STEP 1: Send form data (with file) to /apply-pass
+          // STEP 1: Send form data with credentials
           const formDataToSend = new FormData(passForm);
-          await fetch('/apply-pass', { method: 'POST', body: formDataToSend });
+          await fetch('/apply-pass', { 
+            method: 'POST', 
+            body: formDataToSend,
+            credentials: 'include' // <-- IMPORTANT
+          });
 
           // STEP 2: Save payment details
           const receiptRes = await fetch('/payment-success', {
@@ -211,7 +215,8 @@
               from: document.getElementById('from').value,
               to: document.getElementById('to').value,
               duration: document.getElementById('duration').value
-            })
+            }),
+            credentials: 'include' // <-- IMPORTANT
           });
 
           const result = await receiptRes.json();

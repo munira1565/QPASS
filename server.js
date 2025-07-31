@@ -18,7 +18,7 @@ const AppliedUser = require('./models/applied-users');
 const Notification = require('./models/notification');
 
 const app = express();
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT;
 
 
 app.set('view engine', 'ejs');
@@ -43,18 +43,19 @@ app.use(
       mongoUrl: process.env.MONGODB_URI,
       ttl: 14 * 24 * 60 * 60, // 14 days
     }),
-    cookie: { 
-      secure: process.env.NODE_ENV === 'production', // true only in production (Render)
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // true only in production
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none', // allow cross-site cookies
       maxAge: 14 * 24 * 60 * 60 * 1000
     }
+
   })
 );
 
 
 // MongoDB connection
-const uri = process.env.MONGODB_URI;  
+const uri = process.env.MONGODB_URI;
 mongoose.connect(uri)
   .then(() => console.log('MongoDB connected successfully!'))
   .catch((err) => console.error('MongoDB connection error:', err));
@@ -106,7 +107,8 @@ app.post('/create-order', async (req, res) => {
 
 // Dashboard
 app.get('/dashboard', async (req, res) => {
-   console.log("SESSION USER:", req.session.userId);
+  
+
   if (!req.session.userId) return res.redirect('/login');
   const user = await User.findById(req.session.userId).lean();
   const latestApplication = await AppliedUser.findOne({ userId: user._id }).sort({ appliedAt: -1 }).lean();
@@ -217,7 +219,11 @@ app.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (user && (await bcrypt.compare(password, user.password))) {
+
+      
       req.session.userId = user._id;
+      
+
       res.redirect('/dashboard');
     } else {
       res.render('login', { errorMessage: 'Invalid credentials. Please try again.' });
